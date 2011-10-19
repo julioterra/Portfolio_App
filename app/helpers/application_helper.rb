@@ -1,11 +1,11 @@
 module ApplicationHelper
   
   def title
-    base_title = "Welcome to my Rails app"
+    base_title = "Portfolios"
     if @title
-      "#{base_title}, this is the page: #{@title}"
+      "#{base_title} | #{@title}"
     else
-      "#{base_title}, this is a title-less page"
+      "#{base_title}"
     end    
   end
   
