@@ -1,14 +1,24 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title><%= title %></title>
-  <%= csrf_meta_tags %>
-  <%= stylesheet_link_tag  'blueprint/screen', 	:media => 'screen' %>
-  <%= stylesheet_link_tag  'blueprint/print', 	:media => 'print' %>
+ 	<%= csrf_meta_tags %>
+	<%= render 'layouts/stylesheets'%>
 </head>
+
 <body>
+	<div class="container">
+		
+		<!-- header containing log and navigation menu -->
+		<%= render 'layouts/header'%>
 
-<%= yield %>
-
+		<!-- main content area that is defined in other templates -->
+		<section class="round">
+			<%= yield %>
+		</section>
+		
+		<%= render 'layouts/footer'%>
+	</div>
 </body>
 </html>
