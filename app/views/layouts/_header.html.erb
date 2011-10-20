@@ -1,10 +1,12 @@
 <header>
 	<%= image_tag("logo.png", alt: "Portfolio App", class: "round")%>
+	
 	<nav class="round">
 		<ul>
-			<li><%= link_to "Home", "#"%></li>
-			<li><%= link_to "About", "#"%></li>
-			<li><%= link_to "Contacts", "#"%></li>
+			<% home = "Home"; about = "About"; contact = "Contacts" %>
+			<li><%= link_to home, home_path %></li>
+			<li><%= link_to about, about_path %></li>
+			<li><%= link_to contact, contact_path %></li>
 		</ul>
 	</nav>
 </header>
