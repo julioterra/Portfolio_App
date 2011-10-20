@@ -18,6 +18,7 @@ group :development do
 end
 
 group :test do
+
 	# gem 'rspec', '2.0.1' # original setting, changed due to errors
 	gem 'rspec', '2.6.0'
 	gem 'webrat', '0.7.1'
