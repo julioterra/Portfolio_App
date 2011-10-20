@@ -30,10 +30,7 @@ GEM
       activesupport (= 3.1.0)
     activesupport (3.1.0)
       multi_json (~> 1.0)
-<<<<<<< HEAD
-=======
     annotate (2.4.0)
->>>>>>> modeling-users
     arel (2.2.1)
     bcrypt-ruby (3.0.1)
     builder (3.0.0)
