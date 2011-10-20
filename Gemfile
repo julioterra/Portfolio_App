@@ -12,11 +12,14 @@ group :production do
 end
 
 group :development do
-	gem 'rspec-rails', '2.0.1'
+	# gem 'rspec-rails', '2.0.1'  # original setting, changed due to errors
+	gem 'rspec-rails', '2.6.1'
+	gem 'annotate', '2.4.0'
 end
 
 group :test do
-	gem 'rspec', '2.0.1'
+	# gem 'rspec', '2.0.1' # original setting, changed due to errors
+	gem 'rspec', '2.6.0'
 	gem 'webrat', '0.7.1'
 end
 
