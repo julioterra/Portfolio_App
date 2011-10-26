@@ -1,15 +1,19 @@
 SampleApp::Application.routes.draw do
-  get "users/new"
+  resources :users
 
-  #get "pages/home"
-  #get "pages/about"
-  #get "pages/contact"
+  get 'users/new'
 
+  match '/signup', to: 'users#new'
+
+  # NON-REST PAGES
   root to: 'pages#home'
   match '/home', to: 'pages#home'
   match '/about', to: 'pages#about'
   match '/contact', to: 'pages#contact'
-  match '/signup', to: 'users#new'
+  #get "pages/home"
+  #get "pages/about"
+  #get "pages/contact"
+
 
 
   # The priority is based upon order of creation:
