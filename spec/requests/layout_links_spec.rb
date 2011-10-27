@@ -30,7 +30,7 @@ describe 'LayoutLinks' do
     response.should have_selector 'title', content: "Home"
     click_link "Contact"
     response.should have_selector 'title', content: "Contact"
-    click_link "Sign Up Now Kamikaze!"
+    click_link 'Sign Up Now Kamikaze!'
     response.should have_selector 'title', content: "Sign Up"
   end
   

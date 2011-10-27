@@ -11,7 +11,6 @@ header img {
 	padding: 1em;
 }
 
-
 section {
 	margin-top: 1em;
 	font-size: 120%;
@@ -85,7 +84,22 @@ nav ul li a:visited {
 	border-radius: 10px;
 }
 
-/* Signup-Button ********/
+/* Footer ********/
+
+footer {
+	text-align:center;
+	margin-top: 10px;
+	width: 100%;
+	margin-left: auto;
+	margin-right: auto;	
+}
+
+footer nav {
+	float: none;	
+}
+
+
+/* INTRO PAGE: Signup-Button ********/
 
 a.signup_button {
 	margin-left: auto;
@@ -100,17 +114,27 @@ a.signup_button {
 	padding: 20px;
 }
 
+/* USER PAGES ********/
+/* SHOW PAGE: Signup-Button ********/
 
-footer {
-	text-align:center;
-	margin-top: 10px;
+table.profile {
 	width: 100%;
-	margin-left: auto;
-	margin-right: auto;	
+	margin-bottom: 0;	
 }
 
-/* Footer ********/
+td.main {
+	width: 70%;
+	padding: 1em;
+}
 
-footer nav {
-	float: none;	
+td.sidebar {
+	width: 30%;
+	padding: 1em;
+	vertical-align: top;
+	background: #ffc;
+}
+
+td.sidebar {
+	border: 1px solid #999;
+	margin-bottom: -15px;
 }

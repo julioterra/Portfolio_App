@@ -1,19 +1,22 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.1.0'
 
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3', :require => 'sqlite3', :group => :development
+gem 'rails', '3.1.0'
+gem 'sqlite3', :require => 'sqlite3' #, :group => :development
+gem 'gravatar_image_tag'
+gem 'jquery-rails'
 
-group :production do
-  gem 'pg'
-end
 
 group :development do
 	# gem 'rspec-rails', '2.0.1'
 	gem 'rspec-rails', '2.6.1'
+end
+
+group :production do
+  gem 'pg'
 end
 
 group :test do
@@ -33,9 +36,6 @@ group :assets do
   gem 'coffee-rails', "~> 3.1.0"
   gem 'uglifier'
 end
-
-
-gem 'jquery-rails'
 
 # Use unicorn as the web server
 # gem 'unicorn'
