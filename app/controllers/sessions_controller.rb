@@ -12,13 +12,15 @@ class SessionsController < ApplicationController
       @title = "Log in"
       render :new                   # render the 'new' view again
     else                            # try to save new @user data
-      sign_in user
+      # sign_in user
+      session_sign_in user
       redirect_to user_path(user)         # redirect user to 'show' page (and view)
     end
   end
 
   def destroy
-    sign_out
+    # sign_out
+    session_sign_out
     redirect_to root_path
   end
 
