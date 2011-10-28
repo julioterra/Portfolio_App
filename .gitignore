@@ -4,4 +4,4 @@ log/*.log
 tmp/
 .sass-cache/
 webrat.log
-.DS_Store
+.DS_Sto*

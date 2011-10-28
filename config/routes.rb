@@ -1,18 +1,27 @@
 SampleApp::Application.routes.draw do
-  resources :users
 
-  get 'users/new'
+  # USER controller URIs and pages
+    # treat the controller pages as a RESTful resource
+    resources :users
 
-  match '/signup', to: 'users#new'
+    # create routes by explicitly defining a path and linking it to a controller/action 
+    match '/signup', to: 'users#new'
 
-  # NON-REST PAGES
-  root to: 'pages#home'
-  match '/home', to: 'pages#home'
-  match '/about', to: 'pages#about'
-  match '/contact', to: 'pages#contact'
-  #get "pages/home"
-  #get "pages/about"
-  #get "pages/contact"
+
+  # PAGES controller URIs and pages
+    # treat the controller pages as a RESTful resource
+    resources :pages
+  
+    # create routes by explicitly defining a path and linking it to a controller/action 
+    root to: 'pages#home'
+    match '/home', to: 'pages#home'
+    match '/about', to: 'pages#about'
+    match '/contact', to: 'pages#contact'
+  
+    # create routes whose path matches the pattern controller/action 
+    # get "pages/home"      
+    # get "pages/about"     
+    # get "pages/contact"
 
 
 

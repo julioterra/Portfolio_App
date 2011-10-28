@@ -76,6 +76,12 @@ nav ul li a:visited {
 	color: #90c;
 }
 
+/* Header ********/
+
+header nav {
+	vertical-align: top;
+}
+
 /* General Styling ********/
 
 .round {
@@ -138,3 +144,50 @@ td.sidebar {
 	border: 1px solid #999;
 	margin-bottom: -15px;
 }
+
+
+/* FORMS: ********/
+
+div.field, div.actions {
+	vertical-align: bottom;
+	margin-bottom: 10px;	
+}
+
+/* errors on forms */
+.field_with_errors {
+	display:inline;
+}
+
+/* change color of text entry boxes to red*/
+.field_with_errors input {
+	border-color: red;
+}
+
+.field_with_errors label {
+	color: red;
+}
+
+#error_explanation {
+	width: 400px;
+	border: 1px solid red;
+	padding: 7px;
+	padding-bottom: 12px;
+	margin-bottom: 20px;
+	background-color: #f0f0f0;
+}
+
+
+#error_explanation p {
+	color: #333;
+	margin-bottom: 0;
+	padding: 5px;
+}
+
+#error_explanation ul li {
+	font-size: 12px;
+	list-style: square;
+}
+
+
+
+

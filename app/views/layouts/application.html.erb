@@ -15,9 +15,13 @@
 
 		<!-- main content area that is defined in other templates -->
 		<section class="round">
+			<% flash.each do |key, value| %>
+				<%= content_tag :div, value, class: "flash #{key} round"%>
+				<!-- <div class = "flash <%= key %> round"><%= value %></div> -->
+			<% end %>
+			
 			<%= yield %>
-		</section>
-		
+		</section>		
 		<%= render 'layouts/footer'%>
 		<%= debug(params) if Rails.env.development? %>
 	</div>

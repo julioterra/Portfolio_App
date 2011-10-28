@@ -1,0 +1,27 @@
+<h1><%= title %></h1>
+
+<p>
+Test using the page_path("name") method associated to the pages controller (which has been set-up as a resource, with several additional standalone pages). Checking what happens when I try to link to hard-coded pages and pages that don't exist (to be treated as a "show" resource)
+</p>
+
+Hard-Coded Pages: these links don't send you to the hard coded pages because Rails treats them as part of a RESTful resource. Therefore, it calls the show action and view with the page name as an id. 
+<ul>
+	<% @hard_pages.each do |page|%>
+	<li><%= link_to page, page_path(page)%></li>
+	<% end %>
+</ul>
+
+
+Hard-Coded Pages: these links as expected, Rails takes us to a show page with whichever one of the ids from below that you click on.
+<ul>
+	<% @soft_pages.each do |page|%>
+	<li><%= link_to page, page_path(page)%></li>
+	<% end %>
+</ul>
+
+
+
+<p>This is a test file used to test out how resources and normal page routes work (and whether I can have a controller that handles a resource and other pages). If this page is working then it means that the same controller can handle both. 
+	<br/>
+	<br/>Find this file in app/views/pages/index.html.erb
+</p>
