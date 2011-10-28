@@ -70,7 +70,7 @@ describe UsersController do
   # POST / CREATE TESTS
   describe "POST 'create'" do
 
-    describe "failure scenarios" do
+    describe "FAIL scenarios" do
       before(:each) do
         @attr = {name: "", email: "", password: "", password_confirmation: ""}
       end
@@ -93,7 +93,7 @@ describe UsersController do
       end
     end    
 
-    describe "success scenarios" do
+    describe "SUCCESS scenarios" do
       before(:each) do
         @attr = {name: "joe blow", email: "test@example.com", password: "example", password_confirmation: "example"}
       end
@@ -110,6 +110,11 @@ describe UsersController do
         post :create, :user => @attr
         flash[:success].should =~ /welcome to the portfolio app/i
       end
+      it "should leave the signed in" do
+        post :create, :user => @attr
+        controller.should be_signed_in
+      end
+
     end    
 
   end

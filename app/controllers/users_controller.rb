@@ -16,7 +16,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(params[:user])     # takes data from form and creates @user instance variable
     if @user.save                       # try to save new @user data
-      @title = @user.name                   # set title
+      sign_in @user
       flash[:success] = "Welcome to the Portfolio App!"
       redirect_to @user                     # redirect user to 'show' page (and view)
     else                                # if not able to save @user data

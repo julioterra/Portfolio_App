@@ -17,11 +17,18 @@ class User < ActiveRecord::Base
 
   # ~~~~~~~~~~~~~~~~
   # class methods
-  def self.authenticate_user(submitted_email, submitted_password)
+  def self.authenticate(submitted_email, submitted_password)
     user = find_by_email(submitted_email)
     return nil if (user == nil) 
     return user if user.has_password?(submitted_password) 
   end
+
+  def self.authenticate_with_salt(id, cookie_salt)
+    user = find_by_id(id)
+    # if the user exists and the user's salt equals the cookie_salt then return the user
+    (user && user.salt == cookie_salt) ? user : nil
+  end
+  
   
   # ~~~~~~~~~~~~~~~~
   # instance methods

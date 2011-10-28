@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "Users" do
 
-  describe "signup" do
+  describe "Account sign-up" do
 
     describe "failure" do
 
@@ -47,6 +47,30 @@ describe "Users" do
           }.should change(User, :count).by(1)
       end
 
+    end
+
+  end
+
+  describe "User sessions" do
+    describe "failure" do
+      it "should not log-in users without email and password" do
+        @user = User.new(:email => "", :password => "")
+        integration_sign_in(@user)
+
+        response.should render_template 'sessions/new'
+        response.should have_selector "div.flash.error", content: "Invalid"
+      end
+    end
+
+    describe "success" do
+      it "should log-in users with email and password" do
+        @user = Factory(:user)
+        integration_sign_in(@user)
+        
+        controller.should be_signed_in
+        click_link "Log out"
+        controller.should_not be_signed_in
+      end
     end
 
   end

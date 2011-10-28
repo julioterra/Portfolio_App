@@ -1,5 +1,12 @@
 SampleApp::Application.routes.draw do
 
+  # SESSION controller URIs and pages
+    resources :sessions, :only => [:new, :create, :destroy]
+    
+    match '/signin', to: 'sessions#new'
+    match '/signout', to: 'sessions#destroy'
+
+
   # USER controller URIs and pages
     # treat the controller pages as a RESTful resource
     resources :users
