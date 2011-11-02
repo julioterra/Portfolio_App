@@ -7,13 +7,13 @@ class SessionsController < ApplicationController
   def create
     user = User.authenticate(params[:session][:email], 
                              params[:session][:password])     
-    if user.nil?            # if user was authenticated
+    if user.nil?            # if user was NOT authenticated
       flash.now[:error] = "Invalid email and password combination. Please re-enter information."
       @title = "Log in"
-      render :new                   # render the 'new' view again
-    else                            # try to save new @user data
-      sign_in user
-      redirect_to user_path(user)         # redirect user to 'show' page (and view)
+      render :new           # render the 'new' view again
+    else                    # if user WAS authenticated
+      sign_in user          # 
+      redirect_back_or user     # redirect user to 'show' page (and view)
     end
   end
 

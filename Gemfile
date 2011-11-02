@@ -13,6 +13,8 @@ gem 'jquery-rails'
 group :development do
 	# gem 'rspec-rails', '2.0.1'
 	gem 'rspec-rails', '2.6.1'
+	gem 'faker', '1.0.1'
+	gem 'will_paginate', '3.0.2'
 end
 
 group :production do

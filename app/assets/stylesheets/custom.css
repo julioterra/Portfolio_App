@@ -121,7 +121,18 @@ a.signup_button {
 }
 
 /* USER PAGES ********/
-/* SHOW PAGE: Signup-Button ********/
+
+/* INDEX: 'users/' */
+
+u1.users {
+	margin-top: 1em;
+}
+
+.users li {
+	list_style: none;
+}
+
+/* SHOW PAGE: 'users/1' */
 
 table.profile {
 	width: 100%;

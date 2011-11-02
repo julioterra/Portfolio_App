@@ -7,6 +7,42 @@ describe UsersController do
     @base_title = "Portfolios | "
   end
 
+
+  describe "GET 'index' " do
+      describe "for non-signed-in users" do
+          it "should deny access" do
+              get :index
+              response.should redirect_to signin_path
+              flash[:notice].should =~ /sign in/i
+          end
+      end
+
+      describe "for signed-in users" do
+          before (:each) do
+              @user = test_sign_in Factory :user
+              second = Factory :user, email: "second@email.com"
+              third = Factory :user, email: "third@email.com"
+              @users = [@user, second, third]
+          end
+          it "should be granted access" do
+              get :index
+              response.should be_success
+          end
+          it "should have the right title" do
+              get :index
+              response.should have_selector "title", content: "All users"
+          end
+          it "should have an element for each user" do
+              get :index
+              @users.each do |user|
+                  response.should have_selector "li", content: user.name
+              end
+          end
+      end
+
+  end
+
+
   describe "GET 'show' " do
     before(:each) do
       @user_new = Factory(:user)
@@ -97,7 +133,7 @@ describe UsersController do
       before(:each) do
         @attr = {name: "joe blow", email: "test@example.com", password: "example", password_confirmation: "example"}
       end
-      it "should accept incomplete forms" do
+      it "should accept complete forms" do
         Proc.new do
           post :create, :user => @attr
         end.should change(User, :count).by(1)
@@ -116,6 +152,129 @@ describe UsersController do
       end
 
     end    
+
+  end
+  
+  # ~~~~~~~~~~~~~~~~~~~
+  # POST / CREATE TESTS
+  describe "GET 'edit' " do
+    before(:each) do
+      @user = Factory(:user)
+      test_sign_in(@user)
+    end
+    it "should be successful" do
+      get :edit, :id => @user
+      response.should be_success
+    end
+    it "should have right title" do
+      get :edit, :id => @user
+      response.should have_selector "title", :content => "edit"
+    end
+    it "should have a link to change profile picture (gravatar)" do
+      get :edit, :id => @user
+      gravatar_url = "http://gravatar.com/emails"
+      response.should have_selector "a", :href => gravatar_url,
+                                         :content => "change"
+    end
+  end
+  
+  
+  # ~~~~~~~~~~~~~~~~~~~
+  # POST / UPDATE TESTS
+  describe "PUT 'update'" do
+    before(:each) do
+      @user = Factory(:user)
+      test_sign_in(@user)
+    end
+
+    describe "FAIL scenarios" do
+      before(:each) do
+        @attr = {name: "", email: "", password: "", password_confirmation: ""}
+      end
+      it "should have the right title" do
+        put :update, :id => @user,:user => @attr
+        response.should have_selector "title", :content => "edit"
+      end
+      it "should not change size of database" do
+        Proc.new do
+          put :update, :id => @user,:user => @attr
+        end.should_not change(User, :count)
+      end
+      it "should render the update page after failed submissions" do
+        put :update, :id => @user,:user => @attr
+        response.should render_template :edit
+      end
+      it "should render error message" do
+        put :update, :id => @user,:user => @attr
+        response.should have_selector "div", :id => "error_explanation"
+      end
+    end    
+
+    describe "SUCCESS scenarios" do
+      before(:each) do
+        @attr = {name: "joe blow", email: "test@example.com", 
+                 password: "example", password_confirmation: "example"}
+      end
+
+      it "should update data" do
+        put :update, :id => @user,:user => @attr
+        @user.reload
+        @user.name.should == @attr[:name]
+        @user.email.should == @attr[:email]
+      end
+      
+      it "should take user to show page" do
+        put :update, :id => @user,:user => @attr
+        response.should redirect_to user_path(@user)
+      end
+      
+      it "should render page with success message" do
+        put :update, :id => @user,:user => @attr
+        flash[:success].should =~ /updated/i
+      end
+      
+      it "should leave the signed in" do
+        put :update, :id => @user,:user => @attr
+        controller.should be_signed_in
+      end
+
+    end    
+
+  end
+  
+  
+  # ~~~~~~~~~~~~~~~~~~~
+  # POST / UPDATE TESTS
+  describe "Authentication of edit/update pages" do
+      before(:each) do
+          @user = Factory(:user)
+      end
+      
+      describe "for non-signed user" do
+          it "should deny access to 'edit'" do
+              get :edit, id: @user
+              response.should redirect_to signin_path
+          end
+          it "should deny access to 'update'" do
+              get :edit, id: @user, user: {}
+              response.should redirect_to signin_path
+          end
+      end
+
+      describe "for signed user" do
+          before(:each) do
+              wrong_user = Factory(:user, :email => "user@example.net")
+              test_sign_in(wrong_user)
+          end
+          it "should require matching user for 'edit'" do
+              get :edit, id: @user
+              response.should redirect_to root_path
+          end
+          it "should require matching user for 'update'" do
+              get :update, id: @user, user: {}
+              response.should redirect_to root_path
+          end
+      end
 
   end
 
