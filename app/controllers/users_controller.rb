@@ -1,9 +1,19 @@
 class UsersController < ApplicationController
-  before_filter :authenticate, :only => [:index, :edit, :update]
-  before_filter :correct_user, :only => [:edit, :update]
+  before_filter :authenticate,  only: [:index, :edit, :update]
+  before_filter :correct_user,  only: [:edit, :update]
+  before_filter :admin_user,    only: :destroy
 
   # future updates
   # make show pages only available to signed in users - though it should be available to all
+
+
+  ## GET users/
+  def destroy
+    user_name = User.find(params[:id])
+    User.find(params[:id]).destroy
+    flash[:success] = "Success: #{user_name} has been deleted"
+    redirect_to users_path
+  end
 
   ## GET users/
   def index
@@ -67,6 +77,10 @@ class UsersController < ApplicationController
     def correct_user
       @user = User.find(params[:id]) 
       redirect_to root_path unless current_user? @user
+    end
+    
+    def admin_user
+      redirect_to(root_path) unless current_user.admin?
     end
 
 end

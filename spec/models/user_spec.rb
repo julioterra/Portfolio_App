@@ -65,17 +65,17 @@ describe User do
             describe "authenticate method functions: " do        
               
                 it "should not work if the email is not valid" do
-                    wrong_password_user = User.authenticate_user("invalid password", @attr[:password])
+                    wrong_password_user = User.authenticate("invalid password", @attr[:password])
                     wrong_password_user.should be_nil
                 end
 
                 it "should not work if the email and password combination is not valid " do
-                    wrong_password_user = User.authenticate_user(@attr[:email], "invalid_pass")
+                    wrong_password_user = User.authenticate(@attr[:email], "invalid_pass")
                     wrong_password_user.should be_nil
                 end
 
                 it "should work if the email and password are correct" do
-                  wrong_password_user = User.authenticate_user(@attr[:email], @attr[:password])
+                  wrong_password_user = User.authenticate(@attr[:email], @attr[:password])
                   wrong_password_user.should == @user
                 end
 
@@ -128,6 +128,26 @@ describe User do
           user_with_same_email = User.new(user_upcase)    #create second user with same email
           user_with_same_email.should_not be_valid        #second user should not be valid
         end
+    end
+    
+    describe "admin attribute" do
+      before(:each) do
+          @user = User.create!(@attr)
+      end
+      
+      it "should respond to admin" do
+        @user.should respond_to(:admin)
+      end
+
+      it "should not be an admin by default" do
+        @user.should_not be_admin
+      end
+
+      it "should not convertible to admin" do
+        @user.toggle!(:admin)
+        @user.should be_admin
+      end
+      
     end
     
 end

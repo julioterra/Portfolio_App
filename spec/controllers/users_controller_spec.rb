@@ -23,7 +23,11 @@ describe UsersController do
               second = Factory :user, email: "second@email.com"
               third = Factory :user, email: "third@email.com"
               @users = [@user, second, third]
+              30.times do
+                  @users << Factory(:user, email: Factory.next(:email))
+              end
           end
+          
           it "should be granted access" do
               get :index
               response.should be_success
@@ -35,8 +39,17 @@ describe UsersController do
           it "should have an element for each user" do
               get :index
               @users.each do |user|
-                  response.should have_selector "li", content: user.name
+                  response.should (have_selector "li", content: user.name)
               end
+          end
+          it "should paginate user" do
+              get :index
+              response.should have_selector "div.pagination"
+              response.should have_selector "span.disabled", content: "Previous"
+              response.should have_selector "a", href: "/users?page=2",
+                                                 content: "2"
+              response.should have_selector "a", href: "/users?page=2",
+                                                 content: "Next"
           end
       end
 
@@ -275,6 +288,52 @@ describe UsersController do
               response.should redirect_to root_path
           end
       end
+
+  end
+  
+  # ~~~~~~~~~~~~~~~~~~~
+  # POST / UPDATE TESTS
+  describe "DELETE 'destroy'" do
+    before(:each) do
+      @user = Factory(:user)
+    end
+
+    describe "as a non-signed-in user" do
+        it "should deny access" do
+            # lambda do 
+            #   delete :destroy, id: @user
+            # end.should_not change(User, :count)
+            delete :destroy, id: @user
+            response.should redirect_to(signin_path)
+        end
+    end
+
+    describe "as a signed-in non-admin user" do
+      it "should deny access" do
+          test_sign_in(@user)
+          delete :destroy, id: @user
+          response.should redirect_to(root_path)
+      end      
+    end
+
+    describe "as a signed-in admin user" do
+      before(:each) do
+        admin = Factory(:user, email: "different@one.com", admin: true)
+        test_sign_in(admin)
+      end
+
+      it "should destroy user" do
+          lambda do
+          delete :destroy, id: @user
+          end.should change(User, :count).by(-1)
+      end      
+
+      it "should redirect to users page" do
+          delete :destroy, id: @user
+          response.should redirect_to(users_path)
+      end      
+      
+    end
 
   end
 
