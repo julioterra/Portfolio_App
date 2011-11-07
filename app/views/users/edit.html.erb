@@ -1,7 +1,8 @@
 <h1><%= @user.name %>: Edit Your Profile</h1>
 <p/>
+
 <%= render 'shared/user_form'%>
 <div>
 	<%= gravatar_for @user %>
-	<a href="http://gravatar.com/emails">change</a>
+	<%= link_to "change", "http://gravatar.com/emails", target: "_blank" %>
 </div>

@@ -199,6 +199,10 @@ div.field, div.actions {
 	list-style: square;
 }
 
+textarea#micropost_content {
+	width:500px;
+	height: 80px;
+}
 
 
 

@@ -1,16 +1,33 @@
 
 <table class="profile" summary="Profile Information">	
 	<tr>
+
 		<td class="main">
+
+			<!-- User Name and Gravatar -->
 			<h1>
 				<%= gravatar_for @user %>
 				<%= @user.name %>
 			</h1>
+
+
+			<!-- List of Microposts -->
+			<% unless @user.microposts.empty?%>
+				<table class="microposts" summary="User microposts">
+					<%= render 'microposts/micropost' %>
+				</table>
+				<%= will_paginate @microposts %>
+			<% end %>
+
 		</td>
+
+		<!-- Sidebar with Name, URL and Post Count -->
 		<td class="sidebar round">
 			<strong>Name</strong> <%= @user.name %> <br/>
-			<strong>URL</strong> <%= link_to user_path(@user), @user %>
+			<strong>URL</strong> <%= link_to user_path(@user), @user %><br/>
+			<strong>Microposts</strong> <%= @user.microposts.count %><br/>
 		</td>
+
 	</tr>
 </table>
 

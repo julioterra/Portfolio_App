@@ -23,10 +23,18 @@ module SessionsHelper
   def current_user?(user)
     user == current_user
   end
+  
+  def authenticate
+    deny_access unless signed_in?
+  end
 
   def deny_access
     store_location
     redirect_to signin_path, :notice => "Please sign in to access this page."
+  end
+
+  def re_route_user
+    redirect_to user_path(current_user), :notice => "Please log-out before trying to register as a new user."
   end
 
   def redirect_back_or(default)

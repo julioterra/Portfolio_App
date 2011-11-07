@@ -17,7 +17,7 @@ describe UsersController do
           end
       end
 
-      describe "for signed-in users" do
+      describe "for signed-in users who are NOT admins" do
           before (:each) do
               @user = test_sign_in Factory :user
               second = Factory :user, email: "second@email.com"
@@ -42,6 +42,12 @@ describe UsersController do
                   response.should (have_selector "li", content: user.name)
               end
           end
+          it "should not be able to delete other users" do
+              get :index
+              @users.each do |user|
+                  response.should_not (have_selector "li", content: "delete")
+              end
+          end
           it "should paginate user" do
               get :index
               response.should have_selector "div.pagination"
@@ -50,6 +56,26 @@ describe UsersController do
                                                  content: "2"
               response.should have_selector "a", href: "/users?page=2",
                                                  content: "Next"
+          end
+      end
+
+      describe "for signed-in users who are ADMINS" do
+          before (:each) do
+              @user = test_sign_in Factory(:user, admin: true)
+              second = Factory :user, email: "second@email.com"
+              third = Factory :user, email: "third@email.com"
+              @users = [@user, second, third]
+              30.times do
+                  @users << Factory(:user, email: Factory.next(:email))
+              end
+          end
+
+          it "should BE able to delete other users" do
+              get :index
+              test_sign_in(@user)
+              @users.each do |user|
+                  response.should (have_selector "li", content: "delete")
+              end
           end
       end
 
@@ -80,6 +106,14 @@ describe UsersController do
       get :show, :id => @user_new
       assigns(:user).should == @user_new       
     end
+    it "should show the user's microposts" do
+        @mp1 = Factory(:micropost, :user => @user, created_at: 1.day.ago)
+        @mp2 = Factory(:micropost, :user => @user, created_at: 1.hour.ago)
+        get :show, id: @user
+        response.should have_selector("span.content", content: mp1.content)
+        response.should have_selector("span.content", content: mp2.content)
+    end
+    
   end
 
   # ~~~~~~~~~~~~~~~~~~~
@@ -292,7 +326,7 @@ describe UsersController do
   end
   
   # ~~~~~~~~~~~~~~~~~~~
-  # POST / UPDATE TESTS
+  # DELETE / DESTROY TESTS
   describe "DELETE 'destroy'" do
     before(:each) do
       @user = Factory(:user)
@@ -300,9 +334,6 @@ describe UsersController do
 
     describe "as a non-signed-in user" do
         it "should deny access" do
-            # lambda do 
-            #   delete :destroy, id: @user
-            # end.should_not change(User, :count)
             delete :destroy, id: @user
             response.should redirect_to(signin_path)
         end
@@ -314,6 +345,13 @@ describe UsersController do
           delete :destroy, id: @user
           response.should redirect_to(root_path)
       end      
+
+      it "should not show delete links" do
+          test_sign_in(@user)
+          delete :destroy, id: @user
+          response.should redirect_to(root_path)
+      end      
+
     end
 
     describe "as a signed-in admin user" do
@@ -335,6 +373,33 @@ describe UsersController do
       
     end
 
+  end
+
+  describe "micropost associations" do
+      before(:each) do
+          @attr = {name: "joe blow", email: "test@example.com", password: "example", password_confirmation: "example"}
+          @user = User.create(@attr)
+          @mp1 = Factory(:micropost, user: @user, created_at: 1.day.ago)
+          @mp1 = Factory(:micropost, user: @user, created_at: 1.hour.ago)
+      end
+      
+      describe "status feed" do
+          it "should have a feed" do
+              @user.should.respond_to(:feed)
+          end
+        
+          it "should show all the messages created by the current user" do
+              @user.feed.include?(@mp1).should be_true
+              @user.feed.include?(@mp2).should be_true
+          end
+      
+          it "should not show messages created by other users" do
+            user2 = Factory(:user, email: Factory.next(:email))
+            user2mp = Factory(:micropost, user: user2)
+            @user.feed.include?(user2mp).should be_false            
+            user2.feed.include?(@mp1).should be_false
+          end
+      end      
   end
 
 end

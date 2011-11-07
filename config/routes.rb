@@ -1,11 +1,5 @@
 SampleApp::Application.routes.draw do
 
-  # SESSION controller URIs and pages
-    resources :sessions, :only => [:new, :create, :destroy]
-    
-    match '/signin', to: 'sessions#new'
-    match '/signout', to: 'sessions#destroy'
-
 
   # USER controller URIs and pages
     # treat the controller pages as a RESTful resource
@@ -13,6 +7,17 @@ SampleApp::Application.routes.draw do
 
     # create routes by explicitly defining a path and linking it to a controller/action 
     match '/signup', to: 'users#new'
+
+
+  # MICROPOST controller URIs and pages
+    resources :microposts, :only => [:create, :destroy]
+
+
+  # SESSION controller URIs and pages
+    resources :sessions, :only => [:new, :create, :destroy]
+    
+    match '/signin', to: 'sessions#new'
+    match '/signout', to: 'sessions#destroy'
 
 
   # PAGES controller URIs and pages

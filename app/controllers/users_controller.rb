@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   before_filter :authenticate,  only: [:index, :edit, :update]
   before_filter :correct_user,  only: [:edit, :update]
   before_filter :admin_user,    only: :destroy
+  before_filter :not_authenticate, only: [:new, :create]
 
   # future updates
   # make show pages only available to signed in users - though it should be available to all
@@ -10,9 +11,17 @@ class UsersController < ApplicationController
   ## GET users/
   def destroy
     user_name = User.find(params[:id]).name
-    User.find(params[:id]).destroy
-    flash[:success] = "Success: #{user_name} has been deleted"
-    redirect_to users_path
+    
+    # check to make sure that admin can't delete their own records
+    if (User.find(params[:id]).email != current_user.email)
+      User.find(params[:id]).destroy
+      flash[:success] = "Success: #{user_name} has been deleted"
+      redirect_to users_path
+    else 
+      flash[:error] = "Error: #{user_name}, you can't delete yourself"
+      redirect_to users_path
+    end
+
   end
 
   ## GET users/
@@ -46,6 +55,7 @@ class UsersController < ApplicationController
   ## GET users/id
   def show
     @user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(page: params[:page])
     @title = @user.name
   end
 
@@ -70,8 +80,9 @@ class UsersController < ApplicationController
 
   private
   
-    def authenticate
-      deny_access unless signed_in?
+
+    def not_authenticate
+      re_route_user unless !signed_in?
     end
     
     def correct_user
