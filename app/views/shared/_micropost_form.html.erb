@@ -1,9 +1,15 @@
 <%= form_for @micropost do |f| %>
 	<%= render 'shared/error_messages', :object => f.object %>
 	<div class="field">
-		<%= f.text_area :content, cols: 40, rows: 4  %>
+		<%= f.text_area :content, cols: 40, rows: 4, maxlength:"140", lengthcut:"true"  %>
 	</div>
 	<div class="action">
 		<%= f.submit "Submit" %>
 	</div>
 <% end %>
+
+<!-- call parseCharCounts to register text area above that 
+	 whose text is going to be counted. -->
+<script type="text/javascript">
+	parseCharCounts();
+</script>

@@ -20,7 +20,12 @@ describe MicropostsController do
   describe "POST 'create'" do 
 
     describe "failure scenarios" do
+        # create an @user instance object with a Factory user
+        # - sign in with another Factory user's information
+        # - create a micropost with content that will be rejected 
         before(:each) do
+            @user = Factory(:user)
+            test_sign_in(Factory(:user, email: Factory.next(:email)))
             @attr = {content: " "}
         end     
 
@@ -39,14 +44,17 @@ describe MicropostsController do
 
 
     describe "success scenarios" do
+        # create an @user instance object and sign it in
+        # - create a micropost with content that will be accepted 
         before(:each) do
+            @user = test_sign_in(Factory(:user))
             @attr = {content: "sample content"}
         end     
         
         it "should create a micropost" do
             lambda do 
               post:create, :micropost => @attr
-            end.should_not change(Micropost, :count).by(1)
+            end.should change(Micropost, :count).by(1)
         end     
 
         it "should send user back to their home page" do
@@ -60,7 +68,38 @@ describe MicropostsController do
         end     
 
     end
+  end
+  
+  describe "DELETE 'destroy'" do
+    describe "non-authorized user" do
+        # create an @user instance object with a Factory user
+        # - sign in with another Factory user's information
+        # - create @micropost instance object with a micropost created by the Factory 
+        before(:each) do
+            @user = Factory(:user)
+            test_sign_in(Factory(:user, email: Factory.next(:email)))
+            @micropost = Factory(:micropost, user: @user)
+        end     
 
+        it "should fail" do
+            delete :destroy, id: @micropost
+            response.should redirect_to(root_path)
+        end
+    end
+
+    describe "authorized user" do
+      # create an @user instance object and sign it in
+      # - create @micropost instance object with a micropost created by the Factory 
+      before(:each) do
+          @user = test_sign_in(Factory(:user))
+          @micropost = Factory(:micropost, user: @user)
+      end     
+      it "should fail" do
+        lambda do
+          delete :destroy, id: @micropost
+        end.should change(Micropost, :count).by(-1)
+      end
+    end
     
   end
   

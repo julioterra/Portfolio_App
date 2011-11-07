@@ -7,4 +7,9 @@ module UsersHelper
   
   end
 
+  def feed_list_show_gravatar?
+    if (@show_gravatar) ; return true 
+    else ; return false ; end
+  end
+
 end

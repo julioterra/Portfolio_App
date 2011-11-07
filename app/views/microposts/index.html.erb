@@ -1,0 +1,14 @@
+<table class="microposts" summary="For signed-in users">
+	<tr>
+		<td class="main">
+			<h1>
+				<%= gravatar_for @cur_user %>
+				<%= @cur_user.name %>
+			</h1>
+			<%= render 'shared/feed'%>
+		</td>
+		<td class="sidebar round">
+			<%= render 'shared/user_info'%>				
+		</td>				
+	</tr>
+</table>

@@ -3,15 +3,18 @@ SampleApp::Application.routes.draw do
 
   # USER controller URIs and pages
     # treat the controller pages as a RESTful resource
-    resources :users
+    resources :users do
+      # MICROPOST controller URIs and pages :+:+: this is in two places
+        resources :microposts
+      # +++ 
+    end
 
+    # +++ MICROPOST controller URIs and pages :+:+: this is in two places
+    resources :microposts, :only => [:create, :destroy, :index]
+    # +++ 
+    
     # create routes by explicitly defining a path and linking it to a controller/action 
     match '/signup', to: 'users#new'
-
-
-  # MICROPOST controller URIs and pages
-    resources :microposts, :only => [:create, :destroy]
-
 
   # SESSION controller URIs and pages
     resources :sessions, :only => [:new, :create, :destroy]
