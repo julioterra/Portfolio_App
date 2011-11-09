@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
-  before_filter :authenticate,  only: [:index, :edit, :update]
-  before_filter :correct_user,  only: [:edit, :update]
-  before_filter :admin_user,    only: :destroy
-  before_filter :not_authenticate, only: [:new, :create]
+  before_filter :authenticate,      except:   [:create, :show, :new]
+  before_filter :correct_user,      only:     [:edit, :update]
+  before_filter :admin_user,        only:     [:destroy]
+  before_filter :not_authenticate,  only:     [:new, :create]
 
   # future updates
   # make show pages only available to signed in users - though it should be available to all
@@ -77,6 +77,29 @@ class UsersController < ApplicationController
       render :edit                           # render the 'new' view again
     end
   end
+  
+  def following
+    @title = "following"
+    @user = User.find(params[:id])
+    @users = @user.following.paginate(page: params[:page])
+    # if @users.count > @user.following.count
+    #   @users = @user.following
+    # end
+    @users.uniq!
+    render 'users/show_follow'
+  end
+  
+  
+  def followers
+    @title = "followers"
+    @user = User.find(params[:id])
+    @users = @user.followers.paginate(page: params[:page])
+    # if @users.count > @user.following.count
+    #   @users = @user.following
+    # end
+    @users.uniq!
+    render 'users/show_follow'
+  end
 
   private
   
@@ -91,6 +114,7 @@ class UsersController < ApplicationController
     end
     
     def admin_user
+      # redirect_to(root_path) unless current_user.respond_to? :admin?     
       redirect_to(root_path) unless current_user.admin?
     end
 

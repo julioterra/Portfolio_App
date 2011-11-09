@@ -15,7 +15,7 @@ module SessionsHelper
     #    returns true, if it returns nil then this method returns false
     self.current_user ? true : false
   end
-
+  
   def current_user
     @current_user ||= user_from_remember_token
   end

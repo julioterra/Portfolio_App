@@ -106,9 +106,9 @@ describe UsersController do
       assigns(:user).should == @user_new       
     end
     it "should show the user's microposts" do
-        @mp1 = Factory(:micropost, :user => @user, created_at: 1.day.ago)
-        @mp2 = Factory(:micropost, :user => @user, created_at: 1.hour.ago)
-        get :show, id: @user
+        mp1 = Factory(:micropost, :user => @user_new, created_at: 1.day.ago)
+        mp2 = Factory(:micropost, :user => @user_new, created_at: 1.hour.ago)
+        get :show, id: @user_new
         response.should have_selector("span.content", content: mp1.content)
         response.should have_selector("span.content", content: mp2.content)
     end
@@ -361,7 +361,7 @@ describe UsersController do
 
       it "should destroy user" do
           lambda do
-          delete :destroy, id: @user
+            delete :destroy, id: @user
           end.should change(User, :count).by(-1)
       end      
 
@@ -379,12 +379,12 @@ describe UsersController do
           @attr = {name: "joe blow", email: "test@example.com", password: "example", password_confirmation: "example"}
           @user = User.create(@attr)
           @mp1 = Factory(:micropost, user: @user, created_at: 1.day.ago)
-          @mp1 = Factory(:micropost, user: @user, created_at: 1.hour.ago)
+          @mp2 = Factory(:micropost, user: @user, created_at: 1.hour.ago)
       end
       
       describe "status feed" do
           it "should have a feed" do
-              @user.should.respond_to(:feed)
+              @user.should respond_to(:feed)
           end
         
           it "should show all the messages created by the current user" do
@@ -401,4 +401,36 @@ describe UsersController do
       end      
   end
 
+  describe 'follow pages' do
+
+    describe 'when not signed in' do
+      it "should protect 'following', rejecting non-signed in users" do
+        get :following, id: 1
+        response.should redirect_to(signin_path)
+      end
+      it "should protect 'followers', rejecting non-signed in users" do
+        get :followers, id: 1
+        response.should redirect_to(signin_path)
+      end
+    end
+
+    describe 'when signed in' do
+      before(:each) do
+        @user = test_sign_in(Factory(:user))
+        @other_user = Factory(:user, email: Factory.next(:email))
+        @user.follow!(@other_user)
+      end
+      it "should show user following" do
+        get :following, id: @user
+        response.should have_selector("a",  href: user_path(@other_user),
+                                            content: @other_user.name)
+      end
+      it "should show user followers" do
+        get :followers, id: @other_user
+        response.should have_selector("a",  href: user_path(@user),
+                                            content: @user.name)
+      end
+    end
+
+  end
 end
