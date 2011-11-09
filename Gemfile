@@ -9,6 +9,7 @@ gem 'sqlite3', :require => 'sqlite3' #, :group => :development
 gem 'gravatar_image_tag'
 gem 'jquery-rails'
 gem 'will_paginate', '3.0.2'
+gem 'therubyracer'
 
 
 group :development do
